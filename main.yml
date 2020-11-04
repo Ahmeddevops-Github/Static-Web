@@ -1,0 +1,42 @@
+- hosts: all
+  tasks:
+  
+  - name: Install Apache
+    yum:
+      name: httpd
+      state: latest
+
+  - name: Httpd Started
+    systemd:
+      name: httpd
+      state: started
+  
+  - name: Httpd Enabled
+    systemd:  
+      name: httpd 
+      enabled:  yes
+      
+  
+  - name: Template Download
+    get_url:
+      url: https://www.free-css.com/assets/files/free-css-templates/download/page1/modular-business.zip
+      dest: /var/www/html
+  
+  - name: Install Unzip
+    yum:
+      name: unzip
+      state: latest
+  
+  - name: Unzip Files
+    unarchive:
+     src: /var/www/html/modular-business.zip
+     dest: /var/www/html/
+     remote_src: yes 
+  
+  - name: New Destination
+    shell: rsync -r /var/www/html/modular-business/*  /var/www/html    
+
+  - name: Create Directory 
+    file: 
+     path: /var/www/html
+     state: directory 
